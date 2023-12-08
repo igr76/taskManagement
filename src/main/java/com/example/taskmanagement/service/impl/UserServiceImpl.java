@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
     log.info("Создать пользователя");
     User user= new User();
       Optional<User> user1= userRepository.findByLogin(userDto.getLogin());
-    if (user1 != null) {new ElemNotFound("Такой пользователь уже существует");
+    if (user1 != null) {throw new UnsupportedOperationException("Такой пользователь уже существует");
 
     }else   { user=userMapper.toEntity(userDto);
     userRepository.save(user);}
@@ -75,8 +75,11 @@ public class UserServiceImpl implements UserService {
 
 
   @Override
-  public Optional<User> getByLogin(@NonNull String login) {
-    return null;
+  public User getByLogin(@NonNull String login) {
+    User user= new User();
+    user= userRepository.findByLogin(login).orElseThrow(()->
+            new ElemNotFound("Такого пользователя не существует"));
+    return user;
   }
 
 

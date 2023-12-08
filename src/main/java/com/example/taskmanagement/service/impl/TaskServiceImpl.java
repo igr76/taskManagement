@@ -7,11 +7,12 @@ import com.example.taskmanagement.exception.UnsupportedOperationException;
 import com.example.taskmanagement.mapper.TaskMapper;
 import com.example.taskmanagement.repository.TaskRepository;
 import com.example.taskmanagement.service.TaskService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-
+@Slf4j
 @Service
 public class TaskServiceImpl implements TaskService {
     private TaskRepository taskRepository;
@@ -23,8 +24,8 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public TaskDto getTask(int id) {
-        return taskMapper.toDTO(taskRepository.findById(id).orElseThrow(()->
+    public TaskDto getTask(String heading) {
+        return taskMapper.toDTO(taskRepository.findByHeading(heading).orElseThrow(()->
                 new ElemNotFound("Такого пользователя не существует")));
     }
 
@@ -37,7 +38,8 @@ public class TaskServiceImpl implements TaskService {
     public TaskDto greatTask(TaskDto taskDto) {
         Optional<Task> task=taskRepository.findByHeading(taskDto.getHeading());
         if (task != null) {
-            new  UnsupportedOperationException("Такая задача уже существует");
+            log.info("111111");
+            throw new  UnsupportedOperationException("Такая задача уже существует");
         }else   taskRepository.save(taskMapper.toEntity(taskDto));
         return taskDto;
     }

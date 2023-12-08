@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 @Service
 public interface TaskService {
-    TaskDto getTask(int id);
+    TaskDto getTask(String heading);
     List<TaskDto> getAllTasks();
     TaskDto greatTask(TaskDto taskDto);
     TaskDto updateTask(TaskDto taskDto);

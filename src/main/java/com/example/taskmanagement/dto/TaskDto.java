@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 @NoArgsConstructor
 @Component
 public class TaskDto {
+    int id;
     String heading;
     String description;
     Status status;

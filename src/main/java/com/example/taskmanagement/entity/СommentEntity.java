@@ -10,11 +10,11 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "users")
-public class СommentEntitty {
+@Table(name = "comments")
+public class СommentEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    int id;
     String comment;
     @ManyToOne
     Task task;

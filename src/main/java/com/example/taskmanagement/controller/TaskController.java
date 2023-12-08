@@ -37,11 +37,11 @@ public class TaskController {
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema()))
     })
     //@PreAuthorize("hasAuthority('ADMIN')"+"|| 'user.login'")
-    @GetMapping(value = "/{id}")
-    public ResponseEntity<TaskDto> getTasks(@PathVariable(name = "id")
-                                           @NotBlank(message = "id не должен быть пустым") int id/*, Authentication authentication*/) {
+    @GetMapping(value = "/{heading}")
+    public ResponseEntity<TaskDto> getTasks(@PathVariable(name = "heading")
+                                           @NotBlank(message = "heading не должен быть пустым") String heading/*, Authentication authentication*/) {
         log.info("controller Получить пользователя");
-        return ResponseEntity.ok(taskService.getTask(id));
+        return ResponseEntity.ok(taskService.getTask(heading));
     }
     @Operation(summary = "Получить пользователя")
     @ApiResponses({
