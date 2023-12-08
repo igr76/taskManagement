@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 @NoArgsConstructor
 @Component
 public class СommentDto {
+    int id;
     String comment;
     int task;
     int author;

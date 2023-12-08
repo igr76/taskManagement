@@ -34,8 +34,19 @@ public class UserServiceImpl implements UserService {
   public UserDto getUser(String login/*, Authentication authentication*/) {
     log.info("Получить данные пользователя" );
     User user= new User();
-    user=userRepository.findByLogin( login).orElseThrow(ElemNotFound::new);
+    user=userRepository.findByLogin( login).orElseThrow(()->
+            new ElemNotFound("Такого пользователя не существует"));
     return userMapper.toDTO(user);
+  }@Override
+  public UserDto greateUser(UserDto userDto/*, Authentication authentication*/) {
+    log.info("Создать пользователя");
+    User user= new User();
+      Optional<User> user1= userRepository.findByLogin(userDto.getLogin());
+    if (user1 != null) {throw new UnsupportedOperationException("Такой пользователь уже существует");
+
+    }else   { user=userMapper.toEntity(userDto);
+    userRepository.save(user);}
+    return userDto;
   }
 
   /**
@@ -45,7 +56,8 @@ public class UserServiceImpl implements UserService {
   public UserDto updateUser(UserDto newUserDto/*, Authentication authentication*/) {
     log.info("Обновить данные пользователя");
     User user= new User();
-    user= userRepository.findByLogin(newUserDto.getLogin()).orElseThrow(ElemNotFound::new);
+    user= userRepository.findByLogin(newUserDto.getLogin()).orElseThrow(()->
+            new ElemNotFound("Такого пользователя не существует"));
     user=userMapper.toEntity(newUserDto);
     userRepository.save(user);
     return newUserDto;
@@ -55,23 +67,19 @@ public class UserServiceImpl implements UserService {
   public void deleteUser(String login/*, Authentication authentication*/) {
     log.info("Удалить пользователя");
     User user= new User();
-    user= userRepository.findByLogin(login).orElseThrow(ElemNotFound::new);
+    user= userRepository.findByLogin(login).orElseThrow(()->
+            new ElemNotFound("Такого пользователя не существует"));
     userRepository.delete(user);
   }
 
-  @Override
-  public UserDto greateUser(UserDto userDto/*, Authentication authentication*/) {
-    log.info("Создать пользователя");
-    User user= new User();
-    user= userRepository.findByLogin(userDto.getLogin()).orElseThrow(ElemNotFound::new);
-    user=userMapper.toEntity(userDto);
-    userRepository.save(user);
-    return userDto;
-  }
+
 
   @Override
-  public Optional<User> getByLogin(@NonNull String login) {
-    return null;
+  public User getByLogin(@NonNull String login) {
+    User user= new User();
+    user= userRepository.findByLogin(login).orElseThrow(()->
+            new ElemNotFound("Такого пользователя не существует"));
+    return user;
   }
 
 
