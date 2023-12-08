@@ -2,14 +2,15 @@ package com.example.taskmanagement.service;
 
 import com.example.taskmanagement.dto.TaskDto;
 import com.example.taskmanagement.entity.Task;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-
+@Service
 public interface TaskService {
-    Task getTask(int id);
-    List<Task> getTasks();
+    TaskDto getTask(int id);
+    List<TaskDto> getAllTasks();
     TaskDto greatTask(TaskDto taskDto);
     TaskDto updateTask(TaskDto taskDto);
-    void deleteTask(TaskDto taskDto);
+    void deleteTask(String heading);
 
 }
