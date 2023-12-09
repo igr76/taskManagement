@@ -1,9 +1,6 @@
 package com.example.taskmanagement;
 
-import com.example.taskmanagement.dto.Priority;
-import com.example.taskmanagement.dto.Status;
-import com.example.taskmanagement.dto.TaskDto;
-import com.example.taskmanagement.dto.UserDto;
+import com.example.taskmanagement.dto.*;
 import com.example.taskmanagement.entity.Task;
 import com.example.taskmanagement.entity.User;
 import com.example.taskmanagement.exception.ElemNotFound;
@@ -80,15 +77,15 @@ public class TaskServiceTest {
 
        @Test
     void greatTaskTest() {
-           Task task=getTask();TaskDto taskDto=getTaskDto();
+           GreatTaskDto taskDto=getGreatTaskDto();
 
         when(taskRepository.findByHeading(any())).thenReturn(null);
-        assertThat(taskService.greatTask(taskDto)).isEqualTo(taskDto);
+           taskService.greatTask(taskDto);
         verify(taskRepository, times(1)).findByHeading(any());
     }
     @Test
     void greatTaskTestNegative() {
-        Task task=getTask();TaskDto taskDto=getTaskDto();
+        Task task=getTask();GreatTaskDto taskDto=getGreatTaskDto();
 
         when(taskRepository.findByHeading(any())).thenReturn(Optional.ofNullable(task));
         assertThatExceptionOfType(UnsupportedOperationException.class).isThrownBy(() -> taskService.greatTask(taskDto));
@@ -136,6 +133,10 @@ public class TaskServiceTest {
     private TaskDto getTaskDto() {
         TaskDto taskDto=new TaskDto(1,"заголовок","описание", Status.IN_PROGRESS, Priority.AVERAGE,1L,1L);
         return taskDto;
+    }
+    private GreatTaskDto getGreatTaskDto() {
+        GreatTaskDto greatTaskDto=new GreatTaskDto("заголовок","описание", Status.IN_PROGRESS, Priority.AVERAGE,1L,1L);
+        return greatTaskDto;
     }
     private User getUser() {
         User user =new User(1,"login","1111",

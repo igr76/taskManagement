@@ -1,5 +1,6 @@
 package com.example.taskmanagement.controller;
 
+import com.example.taskmanagement.dto.GreatTaskDto;
 import com.example.taskmanagement.dto.TaskDto;
 import com.example.taskmanagement.dto.UserDto;
 import com.example.taskmanagement.entity.Task;
@@ -36,7 +37,6 @@ public class TaskController {
             @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema()))
     })
-    //@PreAuthorize("hasAuthority('ADMIN')"+"|| 'user.login'")
     @GetMapping(value = "/{heading}")
     public ResponseEntity<TaskDto> getTasks(@PathVariable(name = "heading")
                                            @NotBlank(message = "заголовок не должен быть пустым") String heading/*, Authentication authentication*/) {
@@ -52,13 +52,12 @@ public class TaskController {
             @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema()))
     })
-    //@PreAuthorize("hasAuthority('ADMIN')"+"|| 'user.login'")
     @GetMapping(value = "/all")
     public ResponseEntity<List<TaskDto>> getAllTasks() {
         log.info("controller Получить все задачи");
         return ResponseEntity.ok(taskService.getAllTasks());
     }
-    @Operation(summary = "Получить все задачи")
+    @Operation(summary = "Получить все задачи по имени автора")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
                     array = @ArraySchema(schema = @Schema(implementation = TaskDto.class)))),
@@ -67,14 +66,13 @@ public class TaskController {
             @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema()))
     })
-    //@PreAuthorize("hasAuthority('ADMIN')"+"|| 'user.login'")
     @GetMapping(value = "/all/{author}")
     public ResponseEntity<List<TaskDto>> getTaskOfAuthor(@PathVariable(name = "author")
-                                                             @NotBlank(message = "заголовок не должен быть пустым") String author) {
-        log.info("controller Получить все задачи");
+                                                             @NotBlank(message = "поле имя автора не должен быть пустым") String author) {
+        log.info("controller Получить все задачи по имени автора");
         return ResponseEntity.ok(taskService.getTaskOfAuthor(author));
     }
-    @Operation(summary = "Получить все задачи")
+    @Operation(summary = "Получить все задачи по имени исполнителя")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
                     array = @ArraySchema(schema = @Schema(implementation = TaskDto.class)))),
@@ -83,11 +81,10 @@ public class TaskController {
             @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema()))
     })
-    //@PreAuthorize("hasAuthority('ADMIN')"+"|| 'user.login'")
     @GetMapping(value = "/all/{priority}")
     public ResponseEntity<List<TaskDto>> getTaskOfPriority(@PathVariable(name = "priority")
-                                                         @NotBlank(message = "заголовок не должен быть пустым") String priority) {
-        log.info("controller Получить все задачи");
+                                                         @NotBlank(message = "поле имя исполнителя  не должен быть пустым") String priority) {
+        log.info("controller Получить все задачи по имени исполнителя");
         return ResponseEntity.ok(taskService.getTaskOfPriority(priority));
     }
     @Operation(summary = "Создать задачу")
@@ -101,11 +98,12 @@ public class TaskController {
     })
     // @PreAuthorize("hasAuthority('ADMIN')"+"|| 'user.login'")
     @PostMapping
-    public ResponseEntity<TaskDto> greatTask(
+    public ResponseEntity<?> greatTask(
             @RequestBody
-            @NotBlank(message = "задача не должна быть пустой") TaskDto taskDto/*, Authentication authentication*/) {
+            @NotBlank(message = "задача не должна быть пустой") GreatTaskDto greatTaskDto/*, Authentication authentication*/) {
         log.info("controller создать задачу");
-        return ResponseEntity.ok(taskService.greatTask(taskDto));
+        taskService.greatTask(greatTaskDto);
+        return (ResponseEntity<?>) ResponseEntity.ok();
     }
     @Operation(summary = "Обновить задачу")
     @ApiResponses({
@@ -133,7 +131,6 @@ public class TaskController {
             @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema()))
     })
-    // @PreAuthorize("hasAuthority('ADMIN')"+"|| 'user.login'")
     @PatchMapping()
     public ResponseEntity<TaskDto> updatePriorityTask(
             @RequestBody

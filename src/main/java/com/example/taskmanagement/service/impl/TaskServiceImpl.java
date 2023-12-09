@@ -1,5 +1,6 @@
 package com.example.taskmanagement.service.impl;
 
+import com.example.taskmanagement.dto.GreatTaskDto;
 import com.example.taskmanagement.dto.TaskDto;
 import com.example.taskmanagement.entity.Task;
 import com.example.taskmanagement.exception.ElemNotFound;
@@ -49,13 +50,13 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public TaskDto greatTask(TaskDto taskDto) {
-        Optional<Task> task=taskRepository.findByHeading(taskDto.getHeading());
+    public void greatTask(GreatTaskDto greatTaskDto) {
+        Optional<Task> task=taskRepository.findByHeading(greatTaskDto.getHeading());
         if (task != null) {
             log.info("111111");
             throw new  UnsupportedOperationException("Такая задача уже существует");
-        }else   taskRepository.save(taskMapper.toEntity(taskDto));
-        return taskDto;
+        }else   taskRepository.save(taskMapper.toEntity(greatTaskDto));
+
     }
 
     @Override
