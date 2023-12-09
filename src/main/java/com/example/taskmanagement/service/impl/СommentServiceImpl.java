@@ -9,10 +9,11 @@ import com.example.taskmanagement.exception.UnsupportedOperationException;
 import com.example.taskmanagement.mapper.СommentMapper;
 import com.example.taskmanagement.repository.СommentRepository;
 import com.example.taskmanagement.service.СommentService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-
+@Service
 public class СommentServiceImpl implements СommentService {
     private СommentRepository commentRepository;
     private СommentMapper commentMapper;

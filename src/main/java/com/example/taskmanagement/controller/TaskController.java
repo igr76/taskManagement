@@ -27,10 +27,10 @@ public class TaskController {
         this.taskService = taskService;
     }
 
-    @Operation(summary = "Получить пользователя")
+    @Operation(summary = "Получить задачу по заголовку")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
-                    array = @ArraySchema(schema = @Schema(implementation = UserDto.class)))),
+                    array = @ArraySchema(schema = @Schema(implementation = TaskDto.class)))),
             @ApiResponse(responseCode = "204", description = "No Content", content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema())),
@@ -39,14 +39,14 @@ public class TaskController {
     //@PreAuthorize("hasAuthority('ADMIN')"+"|| 'user.login'")
     @GetMapping(value = "/{heading}")
     public ResponseEntity<TaskDto> getTasks(@PathVariable(name = "heading")
-                                           @NotBlank(message = "heading не должен быть пустым") String heading/*, Authentication authentication*/) {
-        log.info("controller Получить пользователя");
+                                           @NotBlank(message = "заголовок не должен быть пустым") String heading/*, Authentication authentication*/) {
+        log.info("controller Получить задачу");
         return ResponseEntity.ok(taskService.getTask(heading));
     }
-    @Operation(summary = "Получить пользователя")
+    @Operation(summary = "Получить все задачи")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
-                    array = @ArraySchema(schema = @Schema(implementation = UserDto.class)))),
+                    array = @ArraySchema(schema = @Schema(implementation = TaskDto.class)))),
             @ApiResponse(responseCode = "204", description = "No Content", content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema())),
@@ -55,10 +55,42 @@ public class TaskController {
     //@PreAuthorize("hasAuthority('ADMIN')"+"|| 'user.login'")
     @GetMapping(value = "/all")
     public ResponseEntity<List<TaskDto>> getAllTasks() {
-        log.info("controller Получить пользователя");
+        log.info("controller Получить все задачи");
         return ResponseEntity.ok(taskService.getAllTasks());
     }
-    @Operation(summary = "Создать пользователя")
+    @Operation(summary = "Получить все задачи")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(
+                    array = @ArraySchema(schema = @Schema(implementation = TaskDto.class)))),
+            @ApiResponse(responseCode = "204", description = "No Content", content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema()))
+    })
+    //@PreAuthorize("hasAuthority('ADMIN')"+"|| 'user.login'")
+    @GetMapping(value = "/all/{author}")
+    public ResponseEntity<List<TaskDto>> getTaskOfAuthor(@PathVariable(name = "author")
+                                                             @NotBlank(message = "заголовок не должен быть пустым") String author) {
+        log.info("controller Получить все задачи");
+        return ResponseEntity.ok(taskService.getTaskOfAuthor(author));
+    }
+    @Operation(summary = "Получить все задачи")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(
+                    array = @ArraySchema(schema = @Schema(implementation = TaskDto.class)))),
+            @ApiResponse(responseCode = "204", description = "No Content", content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema()))
+    })
+    //@PreAuthorize("hasAuthority('ADMIN')"+"|| 'user.login'")
+    @GetMapping(value = "/all/{priority}")
+    public ResponseEntity<List<TaskDto>> getTaskOfPriority(@PathVariable(name = "priority")
+                                                         @NotBlank(message = "заголовок не должен быть пустым") String priority) {
+        log.info("controller Получить все задачи");
+        return ResponseEntity.ok(taskService.getTaskOfPriority(priority));
+    }
+    @Operation(summary = "Создать задачу")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
                     array = @ArraySchema(schema = @Schema(implementation = TaskDto.class)))),
@@ -71,11 +103,11 @@ public class TaskController {
     @PostMapping
     public ResponseEntity<TaskDto> greatTask(
             @RequestBody
-            @NotBlank(message = "пользователь не должен быть пустым") TaskDto taskDto/*, Authentication authentication*/) {
-        log.info("controller создать пользователя");
+            @NotBlank(message = "задача не должна быть пустой") TaskDto taskDto/*, Authentication authentication*/) {
+        log.info("controller создать задачу");
         return ResponseEntity.ok(taskService.greatTask(taskDto));
     }
-    @Operation(summary = "Обновить пользователя")
+    @Operation(summary = "Обновить задачу")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
                     array = @ArraySchema(schema = @Schema(implementation = TaskDto.class)))),
@@ -88,11 +120,28 @@ public class TaskController {
     @PatchMapping()
     public ResponseEntity<TaskDto> updateTask(
             @RequestBody
-            @NotBlank(message = "пользователь не должен быть пустым") TaskDto taskDto/*, Authentication authentication*/) {
-        log.info("controller Обновить пользователя");
+            @NotBlank(message = "задача не должна быть пустой") TaskDto taskDto/*, Authentication authentication*/) {
+        log.info("controller Обновить задачу");
         return ResponseEntity.ok(taskService.updateTask(taskDto));
     }
-    @Operation(summary = "Удалить пользователя")
+    @Operation(summary = "Обновить статус исполнения задачи")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(
+                    array = @ArraySchema(schema = @Schema(implementation = TaskDto.class)))),
+            @ApiResponse(responseCode = "204", description = "No Content", content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema()))
+    })
+    // @PreAuthorize("hasAuthority('ADMIN')"+"|| 'user.login'")
+    @PatchMapping()
+    public ResponseEntity<TaskDto> updatePriorityTask(
+            @RequestBody
+            @NotBlank(message = "задача не должна быть пустой") TaskDto taskDto/*, Authentication authentication*/) {
+        log.info("controller Обновить статус исполнения задачи");
+        return ResponseEntity.ok(taskService.updatePriorityTask(taskDto));
+    }
+    @Operation(summary = "Удалить задачу")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(
                     array = @ArraySchema(schema = @Schema(implementation = TaskDto.class)))),
@@ -104,8 +153,8 @@ public class TaskController {
     //@PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/{heading}")
     public void deleteTask(@PathVariable(name = "heading")
-                           @NotBlank(message = "heading не должен быть пустым") String heading/*, Authentication authentication*/) {
-        log.info("controller Удалить пользователя");
+                           @NotBlank(message = "заголовок не должен быть пустым") String heading/*, Authentication authentication*/) {
+        log.info("controller Удалить задачу");
         taskService.deleteTask(heading);
     }
 }
