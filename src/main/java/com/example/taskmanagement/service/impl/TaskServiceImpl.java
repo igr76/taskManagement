@@ -6,6 +6,7 @@ import com.example.taskmanagement.exception.ElemNotFound;
 import com.example.taskmanagement.exception.UnsupportedOperationException;
 import com.example.taskmanagement.mapper.TaskMapper;
 import com.example.taskmanagement.repository.TaskRepository;
+import com.example.taskmanagement.repository.СommentRepository;
 import com.example.taskmanagement.service.TaskService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -17,10 +18,12 @@ import java.util.Optional;
 public class TaskServiceImpl implements TaskService {
     private TaskRepository taskRepository;
     private TaskMapper taskMapper;
+    private СommentRepository commentRepository;
 
-    public TaskServiceImpl(TaskRepository taskRepository, TaskMapper taskMapper) {
+    public TaskServiceImpl(TaskRepository taskRepository, TaskMapper taskMapper, СommentRepository commentRepository) {
         this.taskRepository = taskRepository;
         this.taskMapper = taskMapper;
+        this.commentRepository = commentRepository;
     }
 
     @Override
@@ -28,6 +31,17 @@ public class TaskServiceImpl implements TaskService {
         return taskMapper.toDTO(taskRepository.findByHeading(heading).orElseThrow(()->
                 new ElemNotFound("Такого пользователя не существует")));
     }
+    @Override
+    public List<TaskDto> getTaskOfAuthor(String author) {
+        return taskMapper.toListTaskDto(taskRepository.findByAuthor(author).orElseThrow(()->
+                new ElemNotFound("Такого пользователя не существует")));
+    }
+    @Override
+    public List<TaskDto> getTaskOfPriority(String priority) {
+        return taskMapper.toListTaskDto(taskRepository.findByPriority(priority).orElseThrow(()->
+                new ElemNotFound("Такого пользователя не существует")));
+    }
+
 
     @Override
     public List<TaskDto> getAllTasks() {
@@ -57,12 +71,23 @@ public class TaskServiceImpl implements TaskService {
         taskRepository.save(task);
         return taskDto;
     }
+    @Override
+    public TaskDto updatePriorityTask(TaskDto taskDto) {
+        Task task= new Task();
+        task = taskRepository.findByHeading(taskDto.getHeading()).orElseThrow(()->
+                new ElemNotFound("Такой задачи не существует"));
+        task.setPriority(taskDto.getPriority());
+
+        taskRepository.save(task);
+        return taskMapper.toDTO(task);
+    }
 
     @Override
     public void deleteTask(String heading) {
         Task task= new Task();
             task = taskRepository.findByHeading(heading).orElseThrow(()->
                     new ElemNotFound("Такой задачи не существует"));
-            taskRepository.delete(task);
+        commentRepository.deleteAllFromTask(task.getId());
+        taskRepository.delete(task);
     }
 }

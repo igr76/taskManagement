@@ -10,6 +10,7 @@ import com.example.taskmanagement.exception.ElemNotFound;
 import com.example.taskmanagement.exception.UnsupportedOperationException;
 import com.example.taskmanagement.mapper.TaskMapper;
 import com.example.taskmanagement.repository.TaskRepository;
+import com.example.taskmanagement.repository.СommentRepository;
 import com.example.taskmanagement.service.impl.TaskServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,6 +18,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -30,8 +34,10 @@ public class TaskServiceTest {
     private TaskRepository taskRepository;
     @Mock
     private TaskMapper taskMapper;
+    @Mock
+    private СommentRepository commentRepository;
     @InjectMocks
-    private TaskServiceImpl taskService = new TaskServiceImpl(taskRepository,taskMapper);
+    private TaskServiceImpl taskService = new TaskServiceImpl(taskRepository,taskMapper,commentRepository);
     @Test
     void getTaskTest() {
         Task task=getTask();TaskDto taskDto=getTaskDto();
@@ -46,6 +52,30 @@ public class TaskServiceTest {
         when(taskRepository.findByHeading(any())).thenReturn(Optional.ofNullable(null));
         assertThatExceptionOfType(ElemNotFound.class).isThrownBy(() -> taskService.getTask("заголовок1"));
         verify(taskRepository, times(1)).findByHeading(any());
+    }
+    @Test
+    void getTaskOfAuthorTest() {
+        List<TaskDto> taskDtoList=new ArrayList<>();
+        taskDtoList.add(getTaskDto());
+       List<Task> taskList=new ArrayList<>();
+        taskList.add(getTask());
+
+        when(taskRepository.findByAuthor(anyString())).thenReturn(Optional.of(taskList));
+        when(taskMapper.toListTaskDto(any())).thenReturn((List<TaskDto>) taskDtoList);
+        assertThat(taskService.getTaskOfAuthor(anyString())).isEqualTo(taskDtoList);
+        verify(taskRepository, times(1)).findByAuthor(any());
+    }
+    @Test
+    void getTaskOfPriorityTest() {
+        List<TaskDto> taskDtoList=new ArrayList<>();
+        taskDtoList.add(getTaskDto());
+        List<Task> taskList=new ArrayList<>();
+        taskList.add(getTask());
+
+        when(taskRepository.findByPriority(anyString())).thenReturn(Optional.of(taskList));
+        when(taskMapper.toListTaskDto(any())).thenReturn((List<TaskDto>) taskDtoList);
+        assertThat(taskService.getTaskOfPriority(anyString())).isEqualTo(taskDtoList);
+        verify(taskRepository, times(1)).findByPriority(any());
     }
 
        @Test
@@ -86,8 +116,8 @@ public class TaskServiceTest {
         Task task=getTask();
 
         when(taskRepository.findByHeading(any())).thenReturn(Optional.ofNullable(task));
+        doNothing().when(commentRepository).deleteAllFromTask(1);
         taskService.deleteTask("login");
-        //   doNothing().when(userRepository).delete(any());
         verify(taskRepository, times(1)).findByHeading(any());
     }
     @Test
