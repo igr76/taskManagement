@@ -1,20 +1,24 @@
 package com.example.taskmanagement.dto;
 
+import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
+
 /**
  *  Регистрауионный DTO для {@link com.example.taskmanagement.entity.User} сущности
  */
 @Setter
 @Getter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class RegistrationUserDto {
     /** Логин пользователя  */
-    private String login;
+     String login;
     /** Пароль пользователя  */
-    private String password;
+    String password;
     /** Пароль пользователя повторно */
-    private String confirmPassword;
+     String confirmPassword;
     /** Имя пользователя  */
     String name;
     /** Фамилия пользователя  */

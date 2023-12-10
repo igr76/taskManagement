@@ -63,7 +63,7 @@ public class UserController {
           @ApiResponse(responseCode = "403", description = "Доступ запрещен", content = @Content(schema = @Schema())),
           @ApiResponse(responseCode = "404", description = "Не найдено", content = @Content(schema = @Schema()))
   })
-  @PreAuthorize(" 'user.login'")
+  @PreAuthorize(" #userDto.login ==authentication.name")
   @PatchMapping()
   public ResponseEntity<UserDto> updateUser(
           @RequestBody
@@ -80,7 +80,7 @@ public class UserController {
             @ApiResponse(responseCode = "403", description = "Доступ запрещен", content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "404", description = "Не найдено", content = @Content(schema = @Schema()))
     })
-    @PreAuthorize(" 'user.login'")
+    @PreAuthorize(" #userDto.login ==authentication.name")
     @DeleteMapping("/{login}")
     public void deleteUser(@PathVariable(name = "login")
                                @NotBlank(message = "логин не должен быть пустым") String login/*, Authentication authentication*/) {

@@ -102,7 +102,7 @@ public class TaskController {
         log.info("controller создать задачу");
         taskService.greatTask(greatTaskDto);
     }
-    @PreAuthorize(" 'user.login'")
+    @PreAuthorize(" #userDto.login ==authentication.name")
     @Operation(summary = "Обновить задачу")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Успешно", content = @Content(
@@ -144,7 +144,7 @@ public class TaskController {
             @ApiResponse(responseCode = "403", description = "Доступ запрещен", content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "404", description = "Не найдено", content = @Content(schema = @Schema()))
     })
-    @PreAuthorize(" 'user.login'")
+    @PreAuthorize(" #userDto.login ==authentication.name")
     @DeleteMapping("/{heading}")
     public void deleteTask(@PathVariable(name = "heading")
                            @NotBlank(message = "заголовок не должен быть пустым") String heading/*, Authentication authentication*/) {
