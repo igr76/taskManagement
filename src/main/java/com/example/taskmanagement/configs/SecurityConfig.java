@@ -36,19 +36,17 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                .authorizeRequests()
-                .antMatchers("/secured").authenticated()
-                .antMatchers("/info").authenticated()
-                .antMatchers("/admin").hasRole("ADMIN")
-                .anyRequest().permitAll()
-                .and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .exceptionHandling()
-                .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
-                .and().addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
-        return http.build();
+
+        return http
+                .httpBasic(Customizer.withDefaults())
+                .sessionManagement(sessionManagement ->
+                        sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(authorizeHttpRequests ->
+                        authorizeHttpRequests
+                                .requestMatchers("/tasks","/users").authenticated()
+                                .requestMatchers("/comment").permitAll()
+                                .anyRequest().authenticated())
+                .build();
     }
 
     @Bean
