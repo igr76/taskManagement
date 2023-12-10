@@ -34,7 +34,6 @@ public class СommentController {
             @ApiResponse(responseCode = "403", description = "Доступ запрещен", content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "404", description = "Не найдено", content = @Content(schema = @Schema()))
     })
-    //@PreAuthorize("hasAuthority('ADMIN')"+"|| 'user.login'")
     @GetMapping(value = "/all/{id}")
     public ResponseEntity<List<СommentDto>> getAllСommentsOfTask(@PathVariable(name = "id")
                                                          @NotBlank(message = "id задачи") int id) {
@@ -50,7 +49,6 @@ public class СommentController {
             @ApiResponse(responseCode = "403", description = "Доступ запрещен", content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "404", description = "Не найдено", content = @Content(schema = @Schema()))
     })
-    // @PreAuthorize("hasAuthority('ADMIN')"+"|| 'user.login'")
     @PostMapping
     public ResponseEntity<СommentDto> greatСomment(
             @RequestBody
@@ -67,7 +65,6 @@ public class СommentController {
             @ApiResponse(responseCode = "403", description = "Доступ запрещен", content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "404", description = "Не найдено", content = @Content(schema = @Schema()))
     })
-    //@PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/{id}")
     public void deleteTask(@PathVariable(name = "id")
                                @NotBlank(message = "id задачи") int id/*, Authentication authentication*/) {

@@ -14,6 +14,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -94,7 +95,6 @@ public class TaskController {
             @ApiResponse(responseCode = "403", description = "Доступ запрещен", content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "404", description = "Не найдено", content = @Content(schema = @Schema()))
     })
-    // @PreAuthorize("hasAuthority('ADMIN')"+"|| 'user.login'")
     @PostMapping
     public void greatTask(
             @RequestBody
@@ -102,6 +102,7 @@ public class TaskController {
         log.info("controller создать задачу");
         taskService.greatTask(greatTaskDto);
     }
+    @PreAuthorize(" 'user.login'")
     @Operation(summary = "Обновить задачу")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Успешно", content = @Content(
@@ -111,7 +112,6 @@ public class TaskController {
             @ApiResponse(responseCode = "403", description = "Доступ запрещен", content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "404", description = "Не найдено", content = @Content(schema = @Schema()))
     })
-    // @PreAuthorize("hasAuthority('ADMIN')"+"|| 'user.login'")
     @PatchMapping()
     public ResponseEntity<TaskDto> updateTask(
             @RequestBody
@@ -144,7 +144,7 @@ public class TaskController {
             @ApiResponse(responseCode = "403", description = "Доступ запрещен", content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "404", description = "Не найдено", content = @Content(schema = @Schema()))
     })
-    //@PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize(" 'user.login'")
     @DeleteMapping("/{heading}")
     public void deleteTask(@PathVariable(name = "heading")
                            @NotBlank(message = "заголовок не должен быть пустым") String heading/*, Authentication authentication*/) {
