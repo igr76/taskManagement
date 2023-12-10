@@ -27,6 +27,10 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
+        <addForeignKeyConstraint baseTableName="comments" baseColumnNames="task_id" constraintName="comments_task_id_author_tasks_id" referencedTableName="tasks"
+                                 referencedColumnNames="id" onUpdate="CASCADE"/>
+        <addForeignKeyConstraint baseTableName="comments" baseColumnNames="task_id" constraintName="comments_task_id_users_id" referencedTableName="users"
+                                 referencedColumnNames="id" onUpdate="CASCADE"/>
 
     </changeSet>
 
