@@ -11,7 +11,6 @@ import jakarta.transaction.Transactional;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -33,14 +32,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
   }
 
   @Override
-  public UserDto getUser(String login/*, Authentication authentication*/) {
+  public UserDto getUser(String login) {
     log.debug("Получить данные пользователя" );
     User user= new User();
     user=userRepository.findByLogin( login).orElseThrow(()->
             new ElemNotFound("Такого пользователя не существует"));
     return userMapper.toDTO(user);
   }@Override
-  public UserDto greateUser(UserDto userDto/*, Authentication authentication*/) {
+  public UserDto greateUser(UserDto userDto) {
     log.debug("Создать пользователя");
     User user= new User();
     Optional<User> user1= null;
@@ -51,13 +50,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
       userRepository.save(userMapper.toEntity(userDto));
       return userDto;
     }
-//    if (user1.get().getLogin() == null) {
-//      userRepository.save(userMapper.toEntity(userDto));
-//      return userDto;
-//    }else throw new UnsupportedOperationException("Такой пользователь уже существует");
+
   }
   @Override
-  public UserDto updateUser(UserDto newUserDto/*, Authentication authentication*/) {
+  public UserDto updateUser(UserDto newUserDto) {
     log.debug("Обновить данные пользователя");
     User user= new User();
     user= userRepository.findByLogin(newUserDto.getLogin()).orElseThrow(()->
@@ -68,7 +64,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
   }
 
   @Override
-  public void deleteUser(String login/*, Authentication authentication*/) {
+  public void deleteUser(String login) {
     log.debug("Удалить пользователя");
     User user= new User();
     user= userRepository.findByLogin(login).orElseThrow(()->

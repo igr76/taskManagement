@@ -57,11 +57,6 @@ public class TaskServiceImpl implements TaskService {
             throw new UnsupportedOperationException("Такая задача уже существует");
         } catch (ElemNotFound e) {
             taskRepository.save(taskMapper.toEntity(greatTaskDto));}
-//        if (task != null) {
-//            log.info("111111");
-//            throw new  UnsupportedOperationException("Такая задача уже существует");
-//        }else   taskRepository.save(taskMapper.toEntity(greatTaskDto));
-
     }
 
     @Override

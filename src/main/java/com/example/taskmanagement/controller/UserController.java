@@ -13,6 +13,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 /** Контроллер комментариев  */
 @RequestMapping("/users")
@@ -30,7 +31,7 @@ public class UserController {
           @ApiResponse(responseCode = "403", description = "Доступ запрещен", content = @Content(schema = @Schema())),
           @ApiResponse(responseCode = "404", description = "Не найдено", content = @Content(schema = @Schema()))
   })
-  //@PreAuthorize("hasAuthority('ADMIN')"+"|| 'user.login'")
+
   @GetMapping(value = "/{login}")
   public ResponseEntity<UserDto> getUser(@PathVariable(name = "login")
                                            @NotBlank(message = "ad_pk не должен быть пустым") String login/*, Authentication authentication*/) {
@@ -46,7 +47,6 @@ public class UserController {
           @ApiResponse(responseCode = "403", description = "Доступ запрещен", content = @Content(schema = @Schema())),
           @ApiResponse(responseCode = "404", description = "Не найдено", content = @Content(schema = @Schema()))
   })
- // @PreAuthorize("hasAuthority('ADMIN')"+"|| 'user.login'")
   @PostMapping
   public ResponseEntity<UserDto> greaetUser(
           @RequestBody
@@ -63,7 +63,7 @@ public class UserController {
           @ApiResponse(responseCode = "403", description = "Доступ запрещен", content = @Content(schema = @Schema())),
           @ApiResponse(responseCode = "404", description = "Не найдено", content = @Content(schema = @Schema()))
   })
- // @PreAuthorize("hasAuthority('ADMIN')"+"|| 'user.login'")
+  @PreAuthorize(" 'user.login'")
   @PatchMapping()
   public ResponseEntity<UserDto> updateUser(
           @RequestBody
@@ -80,7 +80,7 @@ public class UserController {
             @ApiResponse(responseCode = "403", description = "Доступ запрещен", content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "404", description = "Не найдено", content = @Content(schema = @Schema()))
     })
-    //@PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize(" 'user.login'")
     @DeleteMapping("/{login}")
     public void deleteUser(@PathVariable(name = "login")
                                @NotBlank(message = "логин не должен быть пустым") String login/*, Authentication authentication*/) {
