@@ -10,29 +10,25 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.constraints.NotBlank;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+/** Контроллер комментариев  */
 @RequestMapping("/users")
 @Slf4j
+@RequiredArgsConstructor
 @RestController
 public class UserController {
   private final UserService userService;
-
-  public UserController(UserService userService) {
-    this.userService = userService;
-  }
-
-
   @Operation(summary = "Получить пользователя")
   @ApiResponses({
-          @ApiResponse(responseCode = "200", description = "OK", content = @Content(
+          @ApiResponse(responseCode = "200", description = "Успешно", content = @Content(
                   array = @ArraySchema(schema = @Schema(implementation = UserDto.class)))),
-          @ApiResponse(responseCode = "204", description = "No Content", content = @Content(schema = @Schema())),
-          @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema())),
-          @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema())),
-          @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema()))
+          @ApiResponse(responseCode = "204", description = "нет содержимого", content = @Content(schema = @Schema())),
+          @ApiResponse(responseCode = "401", description = "неверная авторизация или аутентификация", content = @Content(schema = @Schema())),
+          @ApiResponse(responseCode = "403", description = "Доступ запрещен", content = @Content(schema = @Schema())),
+          @ApiResponse(responseCode = "404", description = "Не найдено", content = @Content(schema = @Schema()))
   })
   //@PreAuthorize("hasAuthority('ADMIN')"+"|| 'user.login'")
   @GetMapping(value = "/{login}")
@@ -43,12 +39,12 @@ public class UserController {
   }
   @Operation(summary = "Создать пользователя")
   @ApiResponses({
-          @ApiResponse(responseCode = "200", description = "OK", content = @Content(
+          @ApiResponse(responseCode = "200", description = "Успешно", content = @Content(
                   array = @ArraySchema(schema = @Schema(implementation = UserDto.class)))),
-          @ApiResponse(responseCode = "204", description = "No Content", content = @Content(schema = @Schema())),
-          @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema())),
-          @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema())),
-          @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema()))
+          @ApiResponse(responseCode = "204", description = "нет содержимого", content = @Content(schema = @Schema())),
+          @ApiResponse(responseCode = "401", description = "неверная авторизация или аутентификация", content = @Content(schema = @Schema())),
+          @ApiResponse(responseCode = "403", description = "Доступ запрещен", content = @Content(schema = @Schema())),
+          @ApiResponse(responseCode = "404", description = "Не найдено", content = @Content(schema = @Schema()))
   })
  // @PreAuthorize("hasAuthority('ADMIN')"+"|| 'user.login'")
   @PostMapping
@@ -60,12 +56,12 @@ public class UserController {
   }
   @Operation(summary = "Обновить пользователя")
   @ApiResponses({
-      @ApiResponse(responseCode = "200", description = "OK", content = @Content(
-              array = @ArraySchema(schema = @Schema(implementation = UserDto.class)))),
-      @ApiResponse(responseCode = "204", description = "No Content", content = @Content(schema = @Schema())),
-      @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema())),
-      @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema())),
-      @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema()))
+          @ApiResponse(responseCode = "200", description = "Успешно", content = @Content(
+                  array = @ArraySchema(schema = @Schema(implementation = UserDto.class)))),
+          @ApiResponse(responseCode = "204", description = "нет содержимого", content = @Content(schema = @Schema())),
+          @ApiResponse(responseCode = "401", description = "неверная авторизация или аутентификация", content = @Content(schema = @Schema())),
+          @ApiResponse(responseCode = "403", description = "Доступ запрещен", content = @Content(schema = @Schema())),
+          @ApiResponse(responseCode = "404", description = "Не найдено", content = @Content(schema = @Schema()))
   })
  // @PreAuthorize("hasAuthority('ADMIN')"+"|| 'user.login'")
   @PatchMapping()
@@ -77,12 +73,12 @@ public class UserController {
   }
     @Operation(summary = "Удалить пользователя")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "OK", content = @Content(
+            @ApiResponse(responseCode = "200", description = "Успешно", content = @Content(
                     array = @ArraySchema(schema = @Schema(implementation = UserDto.class)))),
-            @ApiResponse(responseCode = "204", description = "No Content", content = @Content(schema = @Schema())),
-            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema())),
-            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema())),
-            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema()))
+            @ApiResponse(responseCode = "204", description = "нет содержимого", content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "401", description = "неверная авторизация или аутентификация", content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "403", description = "Доступ запрещен", content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "404", description = "Не найдено", content = @Content(schema = @Schema()))
     })
     //@PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/{login}")

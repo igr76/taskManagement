@@ -5,15 +5,15 @@ import com.example.taskmanagement.entity.User;
 import lombok.NonNull;
 
 import java.util.Optional;
-
+/** Сервис пользователей*/
 public interface UserService {
+    /** Получить данные пользователя*/
     UserDto getUser(String login/*, Authentication authentication*/);
-
+    /** Обновить данные пользователя*/
     UserDto updateUser(UserDto newUserDto/*, Authentication authentication*/);
-
+    /** Удалить данные пользователя*/
     void deleteUser(String login/*, Authentication authentication*/);
-
+    /** Создать пользователя*/
     UserDto greateUser(UserDto userDto/*, Authentication authentication*/);
 
-    public User getByLogin(@NonNull String login);
 }

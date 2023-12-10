@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
+/** Репозиторий комментариев */
 @Repository
 public interface СommentRepository extends JpaRepository<СommentEntity,Integer> {
     @Query(nativeQuery = true, value = "SELECT * FROM comments WHERE task_id = :id ORDER BY id")

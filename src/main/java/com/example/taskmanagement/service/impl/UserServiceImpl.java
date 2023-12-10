@@ -8,28 +8,19 @@ import com.example.taskmanagement.mapper.UserMapper;
 import com.example.taskmanagement.repository.UserRepository;
 import com.example.taskmanagement.service.UserService;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-/**
- * Сервис пользователей
- */
-//@RequiredArgsConstructor
+/** Реализация сервиса пользователей*/
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-  private UserRepository userRepository;
-  private UserMapper userMapper;
-  public UserServiceImpl(UserRepository userRepository, UserMapper userMapper) {
-    this.userRepository = userRepository;
-    this.userMapper = userMapper;
-  }
-
-  /**
-   * Получить данные пользователя
-   */
+  private final UserRepository userRepository;
+  private final UserMapper userMapper;
   @Override
   public UserDto getUser(String login/*, Authentication authentication*/) {
     log.info("Получить данные пользователя" );
@@ -41,17 +32,16 @@ public class UserServiceImpl implements UserService {
   public UserDto greateUser(UserDto userDto/*, Authentication authentication*/) {
     log.info("Создать пользователя");
     User user= new User();
-      Optional<User> user1= userRepository.findByLogin(userDto.getLogin());
-    if (user1 != null) {throw new UnsupportedOperationException("Такой пользователь уже существует");
-
-    }else   { user=userMapper.toEntity(userDto);
-    userRepository.save(user);}
-    return userDto;
+    User user1= null;
+    try {
+      user1 = userRepository.findByLogin(userDto.getLogin()).orElseThrow(ElemNotFound::new);
+    } catch (ElemNotFound e) {
+      user=userMapper.toEntity(userDto);
+      userRepository.save(user);
+      return userDto;
+    }
+    throw new UnsupportedOperationException("Такой пользователь уже существует");
   }
-
-  /**
-   * Обновить данные пользователя
-   */
   @Override
   public UserDto updateUser(UserDto newUserDto/*, Authentication authentication*/) {
     log.info("Обновить данные пользователя");
@@ -71,16 +61,4 @@ public class UserServiceImpl implements UserService {
             new ElemNotFound("Такого пользователя не существует"));
     userRepository.delete(user);
   }
-
-
-
-  @Override
-  public User getByLogin(@NonNull String login) {
-    User user= new User();
-    user= userRepository.findByLogin(login).orElseThrow(()->
-            new ElemNotFound("Такого пользователя не существует"));
-    return user;
-  }
-
-
 }

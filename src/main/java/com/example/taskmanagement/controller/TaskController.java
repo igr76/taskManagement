@@ -12,30 +12,29 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.constraints.NotBlank;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+/** Контроллер комментариев  */
 @RequestMapping("/tasks")
 @Slf4j
+@RequiredArgsConstructor
 @RestController
 public class TaskController {
-    private TaskService taskService;
+    private final TaskService taskService;
 
-    public TaskController(TaskService taskService) {
-        this.taskService = taskService;
-    }
 
     @Operation(summary = "Получить задачу по заголовку")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "OK", content = @Content(
-                    array = @ArraySchema(schema = @Schema(implementation = TaskDto.class)))),
-            @ApiResponse(responseCode = "204", description = "No Content", content = @Content(schema = @Schema())),
-            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema())),
-            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema())),
-            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema()))
+            @ApiResponse(responseCode = "200", description = "Успешно", content = @Content(
+                    array = @ArraySchema(schema = @Schema(implementation = UserDto.class)))),
+            @ApiResponse(responseCode = "204", description = "нет содержимого", content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "401", description = "неверная авторизация или аутентификация", content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "403", description = "Доступ запрещен", content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "404", description = "Не найдено", content = @Content(schema = @Schema()))
     })
     @GetMapping(value = "/{heading}")
     public ResponseEntity<TaskDto> getTasks(@PathVariable(name = "heading")
@@ -45,12 +44,12 @@ public class TaskController {
     }
     @Operation(summary = "Получить все задачи")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "OK", content = @Content(
-                    array = @ArraySchema(schema = @Schema(implementation = TaskDto.class)))),
-            @ApiResponse(responseCode = "204", description = "No Content", content = @Content(schema = @Schema())),
-            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema())),
-            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema())),
-            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema()))
+            @ApiResponse(responseCode = "200", description = "Успешно", content = @Content(
+                    array = @ArraySchema(schema = @Schema(implementation = UserDto.class)))),
+            @ApiResponse(responseCode = "204", description = "нет содержимого", content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "401", description = "неверная авторизация или аутентификация", content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "403", description = "Доступ запрещен", content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "404", description = "Не найдено", content = @Content(schema = @Schema()))
     })
     @GetMapping(value = "/all")
     public ResponseEntity<List<TaskDto>> getAllTasks() {
@@ -59,12 +58,12 @@ public class TaskController {
     }
     @Operation(summary = "Получить все задачи по имени автора")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "OK", content = @Content(
-                    array = @ArraySchema(schema = @Schema(implementation = TaskDto.class)))),
-            @ApiResponse(responseCode = "204", description = "No Content", content = @Content(schema = @Schema())),
-            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema())),
-            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema())),
-            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema()))
+            @ApiResponse(responseCode = "200", description = "Успешно", content = @Content(
+                    array = @ArraySchema(schema = @Schema(implementation = UserDto.class)))),
+            @ApiResponse(responseCode = "204", description = "нет содержимого", content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "401", description = "неверная авторизация или аутентификация", content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "403", description = "Доступ запрещен", content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "404", description = "Не найдено", content = @Content(schema = @Schema()))
     })
     @GetMapping(value = "/all/{author}")
     public ResponseEntity<List<TaskDto>> getTaskOfAuthor(@PathVariable(name = "author")
@@ -74,27 +73,27 @@ public class TaskController {
     }
     @Operation(summary = "Получить все задачи по имени исполнителя")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "OK", content = @Content(
-                    array = @ArraySchema(schema = @Schema(implementation = TaskDto.class)))),
-            @ApiResponse(responseCode = "204", description = "No Content", content = @Content(schema = @Schema())),
-            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema())),
-            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema())),
-            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema()))
+            @ApiResponse(responseCode = "200", description = "Успешно", content = @Content(
+                    array = @ArraySchema(schema = @Schema(implementation = UserDto.class)))),
+            @ApiResponse(responseCode = "204", description = "нет содержимого", content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "401", description = "неверная авторизация или аутентификация", content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "403", description = "Доступ запрещен", content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "404", description = "Не найдено", content = @Content(schema = @Schema()))
     })
     @GetMapping(value = "/all/{priority}")
-    public ResponseEntity<List<TaskDto>> getTaskOfPriority(@PathVariable(name = "priority")
-                                                         @NotBlank(message = "поле имя исполнителя  не должен быть пустым") String priority) {
+    public ResponseEntity<List<TaskDto>> getTaskOfExecutor(@PathVariable(name = "executor")
+                                                         @NotBlank(message = "поле имя исполнителя  не должен быть пустым") String executor) {
         log.info("controller Получить все задачи по имени исполнителя");
-        return ResponseEntity.ok(taskService.getTaskOfPriority(priority));
+        return ResponseEntity.ok(taskService.getTaskOfExecutor(executor));
     }
     @Operation(summary = "Создать задачу")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "OK", content = @Content(
-                    array = @ArraySchema(schema = @Schema(implementation = TaskDto.class)))),
-            @ApiResponse(responseCode = "204", description = "No Content", content = @Content(schema = @Schema())),
-            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema())),
-            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema())),
-            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema()))
+            @ApiResponse(responseCode = "200", description = "Успешно", content = @Content(
+                    array = @ArraySchema(schema = @Schema(implementation = UserDto.class)))),
+            @ApiResponse(responseCode = "204", description = "нет содержимого", content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "401", description = "неверная авторизация или аутентификация", content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "403", description = "Доступ запрещен", content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "404", description = "Не найдено", content = @Content(schema = @Schema()))
     })
     // @PreAuthorize("hasAuthority('ADMIN')"+"|| 'user.login'")
     @PostMapping
@@ -107,12 +106,12 @@ public class TaskController {
     }
     @Operation(summary = "Обновить задачу")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "OK", content = @Content(
-                    array = @ArraySchema(schema = @Schema(implementation = TaskDto.class)))),
-            @ApiResponse(responseCode = "204", description = "No Content", content = @Content(schema = @Schema())),
-            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema())),
-            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema())),
-            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema()))
+            @ApiResponse(responseCode = "200", description = "Успешно", content = @Content(
+                    array = @ArraySchema(schema = @Schema(implementation = UserDto.class)))),
+            @ApiResponse(responseCode = "204", description = "нет содержимого", content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "401", description = "неверная авторизация или аутентификация", content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "403", description = "Доступ запрещен", content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "404", description = "Не найдено", content = @Content(schema = @Schema()))
     })
     // @PreAuthorize("hasAuthority('ADMIN')"+"|| 'user.login'")
     @PatchMapping()
@@ -124,28 +123,28 @@ public class TaskController {
     }
     @Operation(summary = "Обновить статус исполнения задачи")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "OK", content = @Content(
-                    array = @ArraySchema(schema = @Schema(implementation = TaskDto.class)))),
-            @ApiResponse(responseCode = "204", description = "No Content", content = @Content(schema = @Schema())),
-            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema())),
-            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema())),
-            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema()))
+            @ApiResponse(responseCode = "200", description = "Успешно", content = @Content(
+                    array = @ArraySchema(schema = @Schema(implementation = UserDto.class)))),
+            @ApiResponse(responseCode = "204", description = "нет содержимого", content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "401", description = "неверная авторизация или аутентификация", content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "403", description = "Доступ запрещен", content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "404", description = "Не найдено", content = @Content(schema = @Schema()))
     })
-    @PatchMapping()
+    @PatchMapping("/upPriority")
     public ResponseEntity<TaskDto> updatePriorityTask(
             @RequestBody
             @NotBlank(message = "задача не должна быть пустой") TaskDto taskDto/*, Authentication authentication*/) {
         log.info("controller Обновить статус исполнения задачи");
-        return ResponseEntity.ok(taskService.updatePriorityTask(taskDto));
+        return ResponseEntity.ok(taskService.updateStatusTask(taskDto));
     }
     @Operation(summary = "Удалить задачу")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "OK", content = @Content(
-                    array = @ArraySchema(schema = @Schema(implementation = TaskDto.class)))),
-            @ApiResponse(responseCode = "204", description = "No Content", content = @Content(schema = @Schema())),
-            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema())),
-            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema())),
-            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema()))
+            @ApiResponse(responseCode = "200", description = "Успешно", content = @Content(
+                    array = @ArraySchema(schema = @Schema(implementation = UserDto.class)))),
+            @ApiResponse(responseCode = "204", description = "нет содержимого", content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "401", description = "неверная авторизация или аутентификация", content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "403", description = "Доступ запрещен", content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "404", description = "Не найдено", content = @Content(schema = @Schema()))
     })
     //@PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/{heading}")

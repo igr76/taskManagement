@@ -69,10 +69,10 @@ public class TaskServiceTest {
         List<Task> taskList=new ArrayList<>();
         taskList.add(getTask());
 
-        when(taskRepository.findByPriority(anyString())).thenReturn(Optional.of(taskList));
+        when(taskRepository.findByExecutor(anyString())).thenReturn(Optional.of(taskList));
         when(taskMapper.toListTaskDto(any())).thenReturn((List<TaskDto>) taskDtoList);
-        assertThat(taskService.getTaskOfPriority(anyString())).isEqualTo(taskDtoList);
-        verify(taskRepository, times(1)).findByPriority(any());
+        assertThat(taskService.getTaskOfExecutor(anyString())).isEqualTo(taskDtoList);
+        verify(taskRepository, times(1)).findByExecutor(any());
     }
 
        @Test

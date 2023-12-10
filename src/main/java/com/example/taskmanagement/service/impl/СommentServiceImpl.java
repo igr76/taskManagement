@@ -9,19 +9,17 @@ import com.example.taskmanagement.exception.UnsupportedOperationException;
 import com.example.taskmanagement.mapper.СommentMapper;
 import com.example.taskmanagement.repository.СommentRepository;
 import com.example.taskmanagement.service.СommentService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+/** Реализация сервиса комментариев*/
+@RequiredArgsConstructor
 @Service
 public class СommentServiceImpl implements СommentService {
-    private СommentRepository commentRepository;
-    private СommentMapper commentMapper;
-
-    public СommentServiceImpl(СommentRepository commentRepository, СommentMapper commentMapper) {
-        this.commentRepository = commentRepository;
-        this.commentMapper = commentMapper;
-    }
+    private final СommentRepository commentRepository;
+    private final СommentMapper commentMapper;
 
     @Override
     public List<СommentDto> getAllСommentsOfTask(int id) {

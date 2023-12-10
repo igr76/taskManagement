@@ -9,24 +9,20 @@ import com.example.taskmanagement.mapper.TaskMapper;
 import com.example.taskmanagement.repository.TaskRepository;
 import com.example.taskmanagement.repository.СommentRepository;
 import com.example.taskmanagement.service.TaskService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+/** Реализация сервиса задач*/
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class TaskServiceImpl implements TaskService {
-    private TaskRepository taskRepository;
-    private TaskMapper taskMapper;
-    private СommentRepository commentRepository;
-
-    public TaskServiceImpl(TaskRepository taskRepository, TaskMapper taskMapper, СommentRepository commentRepository) {
-        this.taskRepository = taskRepository;
-        this.taskMapper = taskMapper;
-        this.commentRepository = commentRepository;
-    }
-
+    private final TaskRepository taskRepository;
+    private final TaskMapper taskMapper;
+    private final СommentRepository commentRepository;
     @Override
     public TaskDto getTask(String heading) {
         return taskMapper.toDTO(taskRepository.findByHeading(heading).orElseThrow(()->
@@ -38,11 +34,10 @@ public class TaskServiceImpl implements TaskService {
                 new ElemNotFound("Такого пользователя не существует")));
     }
     @Override
-    public List<TaskDto> getTaskOfPriority(String priority) {
-        return taskMapper.toListTaskDto(taskRepository.findByPriority(priority).orElseThrow(()->
+    public List<TaskDto> getTaskOfExecutor(String executor) {
+        return taskMapper.toListTaskDto(taskRepository.findByExecutor(executor).orElseThrow(()->
                 new ElemNotFound("Такого пользователя не существует")));
     }
-
 
     @Override
     public List<TaskDto> getAllTasks() {
@@ -73,11 +68,11 @@ public class TaskServiceImpl implements TaskService {
         return taskDto;
     }
     @Override
-    public TaskDto updatePriorityTask(TaskDto taskDto) {
+    public TaskDto updateStatusTask(TaskDto taskDto) {
         Task task= new Task();
         task = taskRepository.findByHeading(taskDto.getHeading()).orElseThrow(()->
                 new ElemNotFound("Такой задачи не существует"));
-        task.setPriority(taskDto.getPriority());
+        task.setStatus(taskDto.getStatus());
 
         taskRepository.save(task);
         return taskMapper.toDTO(task);
