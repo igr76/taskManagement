@@ -4,7 +4,6 @@ import com.example.taskmanagement.dto.GreatTaskDto;
 import com.example.taskmanagement.dto.TaskDto;
 import com.example.taskmanagement.entity.Task;
 import com.example.taskmanagement.exception.ElemNotFound;
-import com.example.taskmanagement.exception.UnsupportedOperationException;
 import com.example.taskmanagement.mapper.TaskMapper;
 import com.example.taskmanagement.repository.TaskRepository;
 import com.example.taskmanagement.repository.СommentRepository;
@@ -18,11 +17,17 @@ import java.util.Optional;
 /** Реализация сервиса задач*/
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class TaskServiceImpl implements TaskService {
-    private final TaskRepository taskRepository;
-    private final TaskMapper taskMapper;
-    private final СommentRepository commentRepository;
+    private  TaskRepository taskRepository;
+    private  TaskMapper taskMapper;
+    private  СommentRepository commentRepository;
+
+    public TaskServiceImpl(TaskRepository taskRepository, TaskMapper taskMapper, СommentRepository commentRepository) {
+        this.taskRepository = taskRepository;
+        this.taskMapper = taskMapper;
+        this.commentRepository = commentRepository;
+    }
+
     @Override
     public TaskDto getTask(String heading) {
         return taskMapper.toDTO(taskRepository.findByHeading(heading).orElseThrow(()->
@@ -46,11 +51,16 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public void greatTask(GreatTaskDto greatTaskDto) {
-        Optional<Task> task=taskRepository.findByHeading(greatTaskDto.getHeading());
-        if (task != null) {
-            log.info("111111");
-            throw new  UnsupportedOperationException("Такая задача уже существует");
-        }else   taskRepository.save(taskMapper.toEntity(greatTaskDto));
+        Task task;
+        try {
+            task=taskRepository.findByHeading(greatTaskDto.getHeading()).orElseThrow(ElemNotFound::new);
+            throw new UnsupportedOperationException("Такая задача уже существует");
+        } catch (ElemNotFound e) {
+            taskRepository.save(taskMapper.toEntity(greatTaskDto));}
+//        if (task != null) {
+//            log.info("111111");
+//            throw new  UnsupportedOperationException("Такая задача уже существует");
+//        }else   taskRepository.save(taskMapper.toEntity(greatTaskDto));
 
     }
 

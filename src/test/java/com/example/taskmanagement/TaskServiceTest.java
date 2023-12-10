@@ -4,7 +4,6 @@ import com.example.taskmanagement.dto.*;
 import com.example.taskmanagement.entity.Task;
 import com.example.taskmanagement.entity.User;
 import com.example.taskmanagement.exception.ElemNotFound;
-import com.example.taskmanagement.exception.UnsupportedOperationException;
 import com.example.taskmanagement.mapper.TaskMapper;
 import com.example.taskmanagement.repository.TaskRepository;
 import com.example.taskmanagement.repository.СommentRepository;
@@ -79,7 +78,7 @@ public class TaskServiceTest {
     void greatTaskTest() {
            GreatTaskDto taskDto=getGreatTaskDto();
 
-        when(taskRepository.findByHeading(any())).thenReturn(null);
+       // when(taskRepository.findByHeading(any())).thenReturn(null);
            taskService.greatTask(taskDto);
         verify(taskRepository, times(1)).findByHeading(any());
     }

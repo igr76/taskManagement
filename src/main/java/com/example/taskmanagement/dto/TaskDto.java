@@ -29,4 +29,4 @@ public class TaskDto {
     long executor;
 }
  //  {"id":"1", "heading":"head" ,"description":"head",
-//  "status":"head", "priority":"head" ,"author":"head", "executor":"head"}
+//  "status":"Status.IN_PROGRESS", "priority":"Priority.AVERAGE" ,"author":"head", "executor":"head"}

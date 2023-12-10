@@ -1,5 +1,6 @@
 package com.example.taskmanagement.mapper;
 
+import com.example.taskmanagement.dto.RegistrationUserDto;
 import com.example.taskmanagement.dto.UserDto;
 import com.example.taskmanagement.dto.СommentDto;
 import com.example.taskmanagement.entity.User;
@@ -15,4 +16,5 @@ public interface UserMapper {
     User toEntity(UserDto userDto);
 
     UserDto toDTO(User userEntity);
+    UserDto toDTOreg(RegistrationUserDto registrationUserDto);
 }

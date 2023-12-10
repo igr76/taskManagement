@@ -15,11 +15,15 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 /** Реализация сервиса комментариев*/
-@RequiredArgsConstructor
 @Service
 public class СommentServiceImpl implements СommentService {
-    private final СommentRepository commentRepository;
-    private final СommentMapper commentMapper;
+    private  СommentRepository commentRepository;
+    private  СommentMapper commentMapper;
+
+    public СommentServiceImpl(СommentRepository commentRepository, СommentMapper commentMapper) {
+        this.commentRepository = commentRepository;
+        this.commentMapper = commentMapper;
+    }
 
     @Override
     public List<СommentDto> getAllСommentsOfTask(int id) {

@@ -3,7 +3,6 @@ package com.example.taskmanagement.controller;
 import com.example.taskmanagement.dto.GreatTaskDto;
 import com.example.taskmanagement.dto.TaskDto;
 import com.example.taskmanagement.dto.UserDto;
-import com.example.taskmanagement.entity.Task;
 import com.example.taskmanagement.service.TaskService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -97,12 +96,11 @@ public class TaskController {
     })
     // @PreAuthorize("hasAuthority('ADMIN')"+"|| 'user.login'")
     @PostMapping
-    public ResponseEntity<?> greatTask(
+    public void greatTask(
             @RequestBody
             @NotBlank(message = "задача не должна быть пустой") GreatTaskDto greatTaskDto/*, Authentication authentication*/) {
         log.info("controller создать задачу");
         taskService.greatTask(greatTaskDto);
-        return (ResponseEntity<?>) ResponseEntity.ok();
     }
     @Operation(summary = "Обновить задачу")
     @ApiResponses({

@@ -16,10 +16,14 @@ import java.util.List;
 public interface TaskMapper {
     @Mapping(target = "author.id", source = "author")
     @Mapping(target = "executor.id", source = "executor")
+    @Mapping(target = "status", source = "status")
+    @Mapping(target = "priority", source = "priority")
     @Mapping(target = "id", ignore = true)
     Task toEntity(GreatTaskDto greatTaskDto);
     @Mapping(target = "author", source = "author.id")
     @Mapping(target = "executor", source = "executor.id")
+    @Mapping(target = "status", source = "status")
+    @Mapping(target = "priority", source = "priority")
     TaskDto toDTO(Task task);
 
     List<TaskDto> toListTaskDto(List<Task> taskList);

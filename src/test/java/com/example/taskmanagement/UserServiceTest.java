@@ -46,7 +46,7 @@ public class UserServiceTest {
     void greateUserTest() {
         User user = getUser();UserDto userDto = getUserDto();
 
-        when(userRepository.findByLogin(any())).thenReturn(null);
+      //  when(userRepository.findByLogin(any())).thenReturn(null);
         assertThat(userService.greateUser(userDto)).isEqualTo(userDto);
         verify(userRepository, times(1)).findByLogin(any());
     }

@@ -7,44 +7,58 @@ import com.example.taskmanagement.exception.ElemNotFound;
 import com.example.taskmanagement.mapper.UserMapper;
 import com.example.taskmanagement.repository.UserRepository;
 import com.example.taskmanagement.service.UserService;
+import jakarta.transaction.Transactional;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /** Реализация сервиса пользователей*/
 @Service
 @Slf4j
-@RequiredArgsConstructor
-public class UserServiceImpl implements UserService {
-  private final UserRepository userRepository;
-  private final UserMapper userMapper;
+public class UserServiceImpl implements UserService, UserDetailsService {
+  private  UserRepository userRepository;
+  private  UserMapper userMapper;
+
+  public UserServiceImpl(UserRepository userRepository, UserMapper userMapper) {
+    this.userRepository = userRepository;
+    this.userMapper = userMapper;
+  }
+
   @Override
   public UserDto getUser(String login/*, Authentication authentication*/) {
-    log.info("Получить данные пользователя" );
+    log.debug("Получить данные пользователя" );
     User user= new User();
     user=userRepository.findByLogin( login).orElseThrow(()->
             new ElemNotFound("Такого пользователя не существует"));
     return userMapper.toDTO(user);
   }@Override
   public UserDto greateUser(UserDto userDto/*, Authentication authentication*/) {
-    log.info("Создать пользователя");
+    log.debug("Создать пользователя");
     User user= new User();
-    User user1= null;
+    Optional<User> user1= null;
     try {
-      user1 = userRepository.findByLogin(userDto.getLogin()).orElseThrow(ElemNotFound::new);
+      user= userRepository.findByLogin(userDto.getLogin()).orElseThrow(ElemNotFound::new);
+      throw new UnsupportedOperationException("Такой пользователь уже существует");
     } catch (ElemNotFound e) {
-      user=userMapper.toEntity(userDto);
-      userRepository.save(user);
+      userRepository.save(userMapper.toEntity(userDto));
       return userDto;
     }
-    throw new UnsupportedOperationException("Такой пользователь уже существует");
+//    if (user1.get().getLogin() == null) {
+//      userRepository.save(userMapper.toEntity(userDto));
+//      return userDto;
+//    }else throw new UnsupportedOperationException("Такой пользователь уже существует");
   }
   @Override
   public UserDto updateUser(UserDto newUserDto/*, Authentication authentication*/) {
-    log.info("Обновить данные пользователя");
+    log.debug("Обновить данные пользователя");
     User user= new User();
     user= userRepository.findByLogin(newUserDto.getLogin()).orElseThrow(()->
             new ElemNotFound("Такого пользователя не существует"));
@@ -55,10 +69,27 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public void deleteUser(String login/*, Authentication authentication*/) {
-    log.info("Удалить пользователя");
+    log.debug("Удалить пользователя");
     User user= new User();
     user= userRepository.findByLogin(login).orElseThrow(()->
             new ElemNotFound("Такого пользователя не существует"));
     userRepository.delete(user);
+  }
+
+  @Override
+  @Transactional
+  public UserDetails loadUserBylogin(String login) {
+    User user = userRepository.findByLogin(login).orElseThrow(()->
+            new ElemNotFound("Такого пользователя не существует")
+    );
+    return new org.springframework.security.core.userdetails.User(
+            user.getName(),
+            user.getPasswordHash(),null);
+  }
+
+
+  @Override
+  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    return loadUserBylogin(username);
   }
 }

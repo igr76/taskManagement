@@ -34,7 +34,7 @@ public class UserController {
   @GetMapping(value = "/{login}")
   public ResponseEntity<UserDto> getUser(@PathVariable(name = "login")
                                            @NotBlank(message = "ad_pk не должен быть пустым") String login/*, Authentication authentication*/) {
-    log.info("controller Получить пользователя");
+    log.debug("controller Получить пользователя");
     return ResponseEntity.ok(userService.getUser(login));
   }
   @Operation(summary = "Создать пользователя")
@@ -51,7 +51,7 @@ public class UserController {
   public ResponseEntity<UserDto> greaetUser(
           @RequestBody
           @NotBlank(message = "пользователь не должен быть пустым") UserDto userDto/*, Authentication authentication*/) {
-    log.info("controller создать пользователя");
+    log.debug("controller создать пользователя");
     return ResponseEntity.ok(userService.greateUser(userDto));
   }
   @Operation(summary = "Обновить пользователя")
@@ -68,7 +68,7 @@ public class UserController {
   public ResponseEntity<UserDto> updateUser(
           @RequestBody
       @NotBlank(message = "пользователь не должен быть пустым") UserDto userDto/*, Authentication authentication*/) {
-    log.info("controller Обновить пользователя");
+    log.debug("controller Обновить пользователя");
     return ResponseEntity.ok(userService.updateUser(userDto));
   }
     @Operation(summary = "Удалить пользователя")
@@ -84,7 +84,7 @@ public class UserController {
     @DeleteMapping("/{login}")
     public void deleteUser(@PathVariable(name = "login")
                                @NotBlank(message = "логин не должен быть пустым") String login/*, Authentication authentication*/) {
-        log.info("controller Удалить пользователя");
+        log.debug("controller Удалить пользователя");
          userService.deleteUser(login);
     }
 
