@@ -37,16 +37,17 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-        return http
-                .httpBasic(Customizer.withDefaults())
-                .sessionManagement(sessionManagement ->
-                        sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(authorizeHttpRequests ->
-                        authorizeHttpRequests
-                                .requestMatchers("/tasks","/users").authenticated()
-                                .requestMatchers("/comment").permitAll()
-                                .anyRequest().authenticated())
-                .build();
+        http
+                .csrf(c->c.disable())
+                .cors(c->c.disable())
+                .authorizeRequests(auth -> auth
+                        .requestMatchers("/users").authenticated()
+                        .requestMatchers("/tasks").authenticated()
+                        .anyRequest().permitAll())
+                .sessionManagement(s->s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .exceptionHandling(e ->e.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
+                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+        return http.build();
     }
 
     @Bean
