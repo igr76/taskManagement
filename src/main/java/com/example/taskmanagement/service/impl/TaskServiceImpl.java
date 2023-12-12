@@ -51,12 +51,9 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public void greatTask(GreatTaskDto greatTaskDto) {
-        Task task;
-        try {
-            task=taskRepository.findByHeading(greatTaskDto.getHeading()).orElseThrow(ElemNotFound::new);
+        if (taskRepository.findByHeadingIsNotNull(greatTaskDto.getHeading())) {
             throw new UnsupportedOperationException("Такая задача уже существует");
-        } catch (ElemNotFound e) {
-            taskRepository.save(taskMapper.toEntity(greatTaskDto));}
+        }else taskRepository.save(taskMapper.toEntity(greatTaskDto));
     }
 
     @Override

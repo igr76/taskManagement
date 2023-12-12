@@ -41,15 +41,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
   }@Override
   public UserDto greateUser(UserDto userDto) {
     log.debug("Создать пользователя");
-    User user= new User();
-    Optional<User> user1= null;
-    try {
-      user= userRepository.findByLogin(userDto.getLogin()).orElseThrow(ElemNotFound::new);
+    if (userRepository.findByLoginIsNotNull(userDto.getLogin())) {
       throw new UnsupportedOperationException("Такой пользователь уже существует");
-    } catch (ElemNotFound e) {
-      userRepository.save(userMapper.toEntity(userDto));
+    } else userRepository.save(userMapper.toEntity(userDto));
       return userDto;
-    }
 
   }
   @Override
