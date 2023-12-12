@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -98,11 +99,10 @@ public class TaskController {
     @PostMapping
     public void greatTask(
             @RequestBody
-            @NotBlank(message = "задача не должна быть пустой") GreatTaskDto greatTaskDto/*, Authentication authentication*/) {
+            @NotBlank(message = "задача не должна быть пустой") GreatTaskDto greatTaskDto) {
         log.info("controller создать задачу");
         taskService.greatTask(greatTaskDto);
     }
-    @PreAuthorize(" userDto.login == authentication.principal.username")
     @Operation(summary = "Обновить задачу")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Успешно", content = @Content(
@@ -115,9 +115,9 @@ public class TaskController {
     @PatchMapping()
     public ResponseEntity<TaskDto> updateTask(
             @RequestBody
-            @NotBlank(message = "задача не должна быть пустой") TaskDto taskDto/*, Authentication authentication*/) {
+            @NotBlank(message = "задача не должна быть пустой") TaskDto taskDto, Authentication authentication) {
         log.info("controller Обновить задачу");
-        return ResponseEntity.ok(taskService.updateTask(taskDto));
+        return ResponseEntity.ok(taskService.updateTask(taskDto,authentication));
     }
     @Operation(summary = "Обновить статус исполнения задачи")
     @ApiResponses({
@@ -131,7 +131,7 @@ public class TaskController {
     @PatchMapping("/upPriority")
     public ResponseEntity<TaskDto> updatePriorityTask(
             @RequestBody
-            @NotBlank(message = "задача не должна быть пустой") TaskDto taskDto/*, Authentication authentication*/) {
+            @NotBlank(message = "задача не должна быть пустой") TaskDto taskDto) {
         log.info("controller Обновить статус исполнения задачи");
         return ResponseEntity.ok(taskService.updateStatusTask(taskDto));
     }
@@ -144,11 +144,10 @@ public class TaskController {
             @ApiResponse(responseCode = "403", description = "Доступ запрещен", content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "404", description = "Не найдено", content = @Content(schema = @Schema()))
     })
-    @PreAuthorize(" userDto.login == authentication.principal.username")
     @DeleteMapping("/{heading}")
     public void deleteTask(@PathVariable(name = "heading")
-                           @NotBlank(message = "заголовок не должен быть пустым") String heading/*, Authentication authentication*/) {
+                           @NotBlank(message = "заголовок не должен быть пустым") String heading, Authentication authentication) {
         log.info("controller Удалить задачу");
-        taskService.deleteTask(heading);
+        taskService.deleteTask(heading,authentication);
     }
 }

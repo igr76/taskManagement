@@ -3,13 +3,16 @@ package com.example.taskmanagement.service.impl;
 import com.example.taskmanagement.dto.GreatTaskDto;
 import com.example.taskmanagement.dto.TaskDto;
 import com.example.taskmanagement.entity.Task;
+import com.example.taskmanagement.entity.User;
 import com.example.taskmanagement.exception.ElemNotFound;
 import com.example.taskmanagement.mapper.TaskMapper;
 import com.example.taskmanagement.repository.TaskRepository;
+import com.example.taskmanagement.repository.UserRepository;
 import com.example.taskmanagement.repository.СommentRepository;
 import com.example.taskmanagement.service.TaskService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,11 +24,14 @@ public class TaskServiceImpl implements TaskService {
     private  TaskRepository taskRepository;
     private  TaskMapper taskMapper;
     private  СommentRepository commentRepository;
+    private UserRepository userRepository;
 
-    public TaskServiceImpl(TaskRepository taskRepository, TaskMapper taskMapper, СommentRepository commentRepository) {
+
+    public TaskServiceImpl(TaskRepository taskRepository, TaskMapper taskMapper, СommentRepository commentRepository,UserRepository userRepository) {
         this.taskRepository = taskRepository;
         this.taskMapper = taskMapper;
         this.commentRepository = commentRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -57,7 +63,11 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public TaskDto updateTask(TaskDto taskDto) {
+    public TaskDto updateTask(TaskDto taskDto, Authentication authentication) {
+        User user=userRepository.findByLogin(authentication.getName()).orElseThrow(ElemNotFound::new);
+        if (user.getLogin() != authentication.getName()) {
+            throw new UnsupportedOperationException("вы не можете менять чужую задачу");
+        }
         Task task= new Task();
             task = taskRepository.findByHeading(taskDto.getHeading()).orElseThrow(()->
                     new ElemNotFound("Такой задачи не существует"));
@@ -81,7 +91,11 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public void deleteTask(String heading) {
+    public void deleteTask(String heading, Authentication authentication) {
+        User user=userRepository.findByLogin(authentication.getName()).orElseThrow(ElemNotFound::new);
+        if (user.getLogin() != authentication.getName()) {
+            throw new UnsupportedOperationException("вы не можете удалять чужую задачу");
+        }
         Task task= new Task();
             task = taskRepository.findByHeading(heading).orElseThrow(()->
                     new ElemNotFound("Такой задачи не существует"));
