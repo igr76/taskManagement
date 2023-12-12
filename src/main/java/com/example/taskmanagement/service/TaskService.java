@@ -3,6 +3,7 @@ package com.example.taskmanagement.service;
 import com.example.taskmanagement.dto.GreatTaskDto;
 import com.example.taskmanagement.dto.TaskDto;
 import com.example.taskmanagement.entity.Task;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,12 +26,12 @@ public interface TaskService {
     void greatTask(GreatTaskDto greatTaskDto);
     /** Обновить задачу
      * @param taskDto - тело задачи*/
-    TaskDto updateTask(TaskDto taskDto);
+    TaskDto updateTask(TaskDto taskDto, Authentication authentication);
     /** Изменить статус задачи
      * @param taskDto - тело задачи*/
     TaskDto updateStatusTask(TaskDto taskDto);
     /** Удалить задачу по заголовку
      * @param heading - заголовок задачи*/
-    void deleteTask(String heading);
+    void deleteTask(String heading, Authentication authentication);
 
 }

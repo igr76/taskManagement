@@ -6,6 +6,7 @@ import com.example.taskmanagement.entity.User;
 import com.example.taskmanagement.exception.ElemNotFound;
 import com.example.taskmanagement.mapper.TaskMapper;
 import com.example.taskmanagement.repository.TaskRepository;
+import com.example.taskmanagement.repository.UserRepository;
 import com.example.taskmanagement.repository.СommentRepository;
 import com.example.taskmanagement.service.impl.TaskServiceImpl;
 import org.junit.jupiter.api.Test;
@@ -32,8 +33,9 @@ public class TaskServiceTest {
     private TaskMapper taskMapper;
     @Mock
     private СommentRepository commentRepository;
+    private UserRepository userRepository;
     @InjectMocks
-    private TaskServiceImpl taskService = new TaskServiceImpl(taskRepository,taskMapper,commentRepository);
+    private TaskServiceImpl taskService = new TaskServiceImpl(taskRepository,taskMapper,commentRepository,userRepository);
     @Test
     void getTaskTest() {
         Task task=getTask();TaskDto taskDto=getTaskDto();
@@ -92,19 +94,21 @@ public class TaskServiceTest {
     }
     @Test
     void updateTaskTest() {
-        Task task=getTask();TaskDto taskDto=getTaskDto();
+        Task task=getTask();TaskDto taskDto=getTaskDto();User user=getUser();
 
         when(taskRepository.findByHeading(any())).thenReturn(Optional.ofNullable(task));
         when(taskRepository.save(any())).thenReturn(task);
-        assertThat(taskService.updateTask(taskDto)).isEqualTo(taskDto);
+        when(userRepository.findByLogin(any())).thenReturn(Optional.of(user));
+        assertThat(taskService.updateTask(taskDto,any())).isEqualTo(taskDto);
         verify(taskRepository, times(1)).findByHeading(any());
     }
     @Test
     void updateTaskTestNegative() {
-        TaskDto taskDto=getTaskDto();
+        TaskDto taskDto=getTaskDto();User user=getUser();
 
         when(taskRepository.findByHeading(any())).thenReturn(Optional.ofNullable(null));
-        assertThatExceptionOfType(ElemNotFound.class).isThrownBy(() -> taskService.updateTask(taskDto));
+        when(userRepository.findByLogin(any())).thenReturn(Optional.of(user));
+        assertThatExceptionOfType(ElemNotFound.class).isThrownBy(() -> taskService.updateTask(taskDto,any()));
         verify(taskRepository, times(1)).findByHeading(any());
     }
     @Test
@@ -113,7 +117,7 @@ public class TaskServiceTest {
 
         when(taskRepository.findByHeading(any())).thenReturn(Optional.ofNullable(task));
         doNothing().when(commentRepository).deleteAllFromTask(1);
-        taskService.deleteTask("login");
+        taskService.deleteTask("login",any());
         verify(taskRepository, times(1)).findByHeading(any());
     }
     @Test
@@ -121,7 +125,7 @@ public class TaskServiceTest {
         TaskDto taskDto=getTaskDto();
 
         when(taskRepository.findByHeading(any())).thenReturn(Optional.ofNullable(null));
-        assertThatExceptionOfType(ElemNotFound.class).isThrownBy(() -> taskService.deleteTask("заголовок"));
+        assertThatExceptionOfType(ElemNotFound.class).isThrownBy(() -> taskService.deleteTask("заголовок",any()));
         verify(taskRepository, times(1)).findByHeading(any());
     }
     private Task getTask() {
