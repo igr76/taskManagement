@@ -1,26 +1,28 @@
 package com.example.taskmanagement.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 
-/** Cущность пассажир  */
+/**
+ *  DTO для {@link com.example.taskmanagement.entity.User} сущности
+ */
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Component
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserDto {
 
-  private String login;
-  private String passwordHash;
-  private String name;
-  private String surname;
-  private String patronymicName;
-
-
-
-
+  /** Логин пользователя  */
+   String login;
+  /** Пароль пользователя  */
+   String passwordHash;
+  /** Имя пользователя  */
+   String name;
+  /** Фамилия пользователя  */
+   String surname;
+  /** Отчество пользователя  */
+   String patronymicName;
 }
+//{"login":"user1" ,"passwordHash":"user1", "name":"user1", "surname":"user1" ,"patronymicName":"user1"}

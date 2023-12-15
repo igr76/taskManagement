@@ -10,85 +10,81 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.constraints.NotBlank;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
+/** Контроллер комментариев  */
 @RequestMapping("/users")
 @Slf4j
+@RequiredArgsConstructor
 @RestController
 public class UserController {
   private final UserService userService;
-
-  public UserController(UserService userService) {
-    this.userService = userService;
-  }
-
-
   @Operation(summary = "Получить пользователя")
   @ApiResponses({
-          @ApiResponse(responseCode = "200", description = "OK", content = @Content(
+          @ApiResponse(responseCode = "200", description = "Успешно", content = @Content(
                   array = @ArraySchema(schema = @Schema(implementation = UserDto.class)))),
-          @ApiResponse(responseCode = "204", description = "No Content", content = @Content(schema = @Schema())),
-          @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema())),
-          @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema())),
-          @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema()))
+          @ApiResponse(responseCode = "204", description = "нет содержимого", content = @Content(schema = @Schema())),
+          @ApiResponse(responseCode = "401", description = "неверная авторизация или аутентификация", content = @Content(schema = @Schema())),
+          @ApiResponse(responseCode = "403", description = "Доступ запрещен", content = @Content(schema = @Schema())),
+          @ApiResponse(responseCode = "404", description = "Не найдено", content = @Content(schema = @Schema()))
   })
-  //@PreAuthorize("hasAuthority('ADMIN')"+"|| 'user.login'")
+
   @GetMapping(value = "/{login}")
   public ResponseEntity<UserDto> getUser(@PathVariable(name = "login")
                                            @NotBlank(message = "ad_pk не должен быть пустым") String login/*, Authentication authentication*/) {
-    log.info("controller Получить пользователя");
+    log.debug("controller Получить пользователя");
     return ResponseEntity.ok(userService.getUser(login));
   }
   @Operation(summary = "Создать пользователя")
   @ApiResponses({
-          @ApiResponse(responseCode = "200", description = "OK", content = @Content(
+          @ApiResponse(responseCode = "200", description = "Успешно", content = @Content(
                   array = @ArraySchema(schema = @Schema(implementation = UserDto.class)))),
-          @ApiResponse(responseCode = "204", description = "No Content", content = @Content(schema = @Schema())),
-          @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema())),
-          @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema())),
-          @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema()))
+          @ApiResponse(responseCode = "204", description = "нет содержимого", content = @Content(schema = @Schema())),
+          @ApiResponse(responseCode = "401", description = "неверная авторизация или аутентификация", content = @Content(schema = @Schema())),
+          @ApiResponse(responseCode = "403", description = "Доступ запрещен", content = @Content(schema = @Schema())),
+          @ApiResponse(responseCode = "404", description = "Не найдено", content = @Content(schema = @Schema()))
   })
- // @PreAuthorize("hasAuthority('ADMIN')"+"|| 'user.login'")
   @PostMapping
   public ResponseEntity<UserDto> greaetUser(
           @RequestBody
           @NotBlank(message = "пользователь не должен быть пустым") UserDto userDto/*, Authentication authentication*/) {
-    log.info("controller создать пользователя");
+    log.debug("controller создать пользователя");
     return ResponseEntity.ok(userService.greateUser(userDto));
   }
   @Operation(summary = "Обновить пользователя")
   @ApiResponses({
-      @ApiResponse(responseCode = "200", description = "OK", content = @Content(
-              array = @ArraySchema(schema = @Schema(implementation = UserDto.class)))),
-      @ApiResponse(responseCode = "204", description = "No Content", content = @Content(schema = @Schema())),
-      @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema())),
-      @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema())),
-      @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema()))
+          @ApiResponse(responseCode = "200", description = "Успешно", content = @Content(
+                  array = @ArraySchema(schema = @Schema(implementation = UserDto.class)))),
+          @ApiResponse(responseCode = "204", description = "нет содержимого", content = @Content(schema = @Schema())),
+          @ApiResponse(responseCode = "401", description = "неверная авторизация или аутентификация", content = @Content(schema = @Schema())),
+          @ApiResponse(responseCode = "403", description = "Доступ запрещен", content = @Content(schema = @Schema())),
+          @ApiResponse(responseCode = "404", description = "Не найдено", content = @Content(schema = @Schema()))
   })
- // @PreAuthorize("hasAuthority('ADMIN')"+"|| 'user.login'")
+  @PreAuthorize(" userDto.login == authentication.principal.username")
   @PatchMapping()
   public ResponseEntity<UserDto> updateUser(
           @RequestBody
       @NotBlank(message = "пользователь не должен быть пустым") UserDto userDto/*, Authentication authentication*/) {
-    log.info("controller Обновить пользователя");
+    log.debug("controller Обновить пользователя");
     return ResponseEntity.ok(userService.updateUser(userDto));
   }
     @Operation(summary = "Удалить пользователя")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "OK", content = @Content(
+            @ApiResponse(responseCode = "200", description = "Успешно", content = @Content(
                     array = @ArraySchema(schema = @Schema(implementation = UserDto.class)))),
-            @ApiResponse(responseCode = "204", description = "No Content", content = @Content(schema = @Schema())),
-            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema())),
-            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema())),
-            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema()))
+            @ApiResponse(responseCode = "204", description = "нет содержимого", content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "401", description = "неверная авторизация или аутентификация", content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "403", description = "Доступ запрещен", content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "404", description = "Не найдено", content = @Content(schema = @Schema()))
     })
-    //@PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize(" userDto.login ==authentication.principal.username")
     @DeleteMapping("/{login}")
     public void deleteUser(@PathVariable(name = "login")
                                @NotBlank(message = "логин не должен быть пустым") String login/*, Authentication authentication*/) {
-        log.info("controller Удалить пользователя");
+        log.debug("controller Удалить пользователя");
          userService.deleteUser(login);
     }
 

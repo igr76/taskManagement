@@ -11,32 +11,29 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.constraints.NotBlank;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+/** Контроллер комментариев  */
 @RequestMapping("/comment")
 @Slf4j
+@RequiredArgsConstructor
 @RestController
 public class СommentController {
-    private СommentService commentService;
-
-    public СommentController(СommentService commentService) {
-        this.commentService = commentService;
-    }
+    private final СommentService commentService;
 
     @Operation(summary = "Получить все комментарии к задаче")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "OK", content = @Content(
+            @ApiResponse(responseCode = "200", description = "Успешно", content = @Content(
                     array = @ArraySchema(schema = @Schema(implementation = UserDto.class)))),
-            @ApiResponse(responseCode = "204", description = "No Content", content = @Content(schema = @Schema())),
-            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema())),
-            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema())),
-            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema()))
+            @ApiResponse(responseCode = "204", description = "нет содержимого", content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "401", description = "неверная авторизация или аутентификация", content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "403", description = "Доступ запрещен", content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "404", description = "Не найдено", content = @Content(schema = @Schema()))
     })
-    //@PreAuthorize("hasAuthority('ADMIN')"+"|| 'user.login'")
     @GetMapping(value = "/all/{id}")
     public ResponseEntity<List<СommentDto>> getAllСommentsOfTask(@PathVariable(name = "id")
                                                          @NotBlank(message = "id задачи") int id) {
@@ -45,14 +42,13 @@ public class СommentController {
     }
     @Operation(summary = "Создать комментарий")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "OK", content = @Content(
-                    array = @ArraySchema(schema = @Schema(implementation = TaskDto.class)))),
-            @ApiResponse(responseCode = "204", description = "No Content", content = @Content(schema = @Schema())),
-            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema())),
-            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema())),
-            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema()))
+            @ApiResponse(responseCode = "200", description = "Успешно", content = @Content(
+                    array = @ArraySchema(schema = @Schema(implementation = UserDto.class)))),
+            @ApiResponse(responseCode = "204", description = "нет содержимого", content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "401", description = "неверная авторизация или аутентификация", content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "403", description = "Доступ запрещен", content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "404", description = "Не найдено", content = @Content(schema = @Schema()))
     })
-    // @PreAuthorize("hasAuthority('ADMIN')"+"|| 'user.login'")
     @PostMapping
     public ResponseEntity<СommentDto> greatСomment(
             @RequestBody
@@ -62,14 +58,13 @@ public class СommentController {
     }
     @Operation(summary = "Удалить комментарий")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "OK", content = @Content(
-                    array = @ArraySchema(schema = @Schema(implementation = TaskDto.class)))),
-            @ApiResponse(responseCode = "204", description = "No Content", content = @Content(schema = @Schema())),
-            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema())),
-            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema())),
-            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema()))
+            @ApiResponse(responseCode = "200", description = "Успешно", content = @Content(
+                    array = @ArraySchema(schema = @Schema(implementation = UserDto.class)))),
+            @ApiResponse(responseCode = "204", description = "нет содержимого", content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "401", description = "неверная авторизация или аутентификация", content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "403", description = "Доступ запрещен", content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "404", description = "Не найдено", content = @Content(schema = @Schema()))
     })
-    //@PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/{id}")
     public void deleteTask(@PathVariable(name = "id")
                                @NotBlank(message = "id задачи") int id/*, Authentication authentication*/) {

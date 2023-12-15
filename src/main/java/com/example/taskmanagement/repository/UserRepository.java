@@ -6,10 +6,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
-
+/** Репозиторий пользователей */
 @Repository
 public interface UserRepository extends JpaRepository<User,Long>{
 
-    @Query(nativeQuery = true, value = "SELECT * FROM users WHERE login = :login ")
     Optional<User> findByLogin(String login);
+    boolean findByLoginIsNotNull(String login);
 }

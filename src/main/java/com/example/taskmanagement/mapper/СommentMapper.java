@@ -4,9 +4,11 @@ import com.example.taskmanagement.dto.СommentDto;
 import com.example.taskmanagement.entity.СommentEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-
 import java.util.List;
 
+/**
+ * маппер для {@link СommentEntity} готовый dto {@link СommentDto}
+ */
 @Mapper(componentModel = "spring")
 public interface СommentMapper {
     @Mapping(target = "task.id", source = "task")
